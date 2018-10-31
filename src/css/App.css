@@ -1,0 +1,49 @@
+a{
+  text-decoration: none;
+}
+
+.tabRoot {
+  display: -webkit-flex;
+  display: flex;
+  height: 40px;
+  flex-direction: row;
+  background-color: aquamarine;
+}
+.tab{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+}
+.mainRoot {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #282c34;
+}
+.normal{
+  font-size: 16px;
+  color: azure;
+}
+.select{
+  font-size: 18px;
+  color: red;
+}
+.mainContent{
+  display: -webkit-flex;
+  display: flex;
+  height: 100%;
+  background-color: gainsboro;
+}
+.noticeContent{
+  background-color:gainsboro;
+}
+.noticeRoot{
+  display: -webkit-flex;
+  display: flex;
+  height: 100%;
+  background-color: #61dafb;
+}

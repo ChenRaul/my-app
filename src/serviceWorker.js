@@ -10,6 +10,7 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read http://bit.ly/CRA-PWA.
 
+//用于生产环境中的本地缓存，可以提高访问速度，且可以离线访问
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
