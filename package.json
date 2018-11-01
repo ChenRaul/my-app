@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "obj-merged": "^1.0.5",
+    "prop-types": "^15.6.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-redux": "^5.1.0",
