@@ -55,6 +55,7 @@ export default class Tab extends Component{
             <div className={'tabRoot'}>
                 <li className={'tab'}>
                     <NavLink exact={true} className={'normal'} to={"/"} activeClassName={'select'}
+
                     >
                         <img src={this.state.mainImg} width={20}height={20}/>
                         首页

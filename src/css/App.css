@@ -46,7 +46,32 @@ a{
   display: -webkit-flex;
   display: flex;
   height: 100%;
+  flex-direction: column;
   background-color: gainsboro;
+}
+.mainTabRoot{
+  display: -webkit-flex;
+  display: flex;
+  height: 40px;
+  background-color: #1296db;
+}
+.mainTabLinkNormal{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #bfbfbf;
+}
+.mainTabLinkSelect{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: white;
 }
 .noticeContent{
   background-color:gainsboro;
