@@ -26,6 +26,7 @@ class MainTabPage extends Component{
     fetchData(index){
        try {
            HttpFetchUtil.sendGet(this.getUrl(index),null,(jsonData)=>{
+               console.log('获取到数据：')
                console.log(jsonData);
                if(jsonData.success){
                    this.props.action.recoverMainStateAction({
@@ -61,6 +62,30 @@ class MainTabPage extends Component{
         return(
             <a   key={index} className={this.state.currentClickTabIndex === index?'mainTabLinkSelect':'mainTabLinkNormal'} onClick={()=>{
                 this.setState({currentClickTabIndex:index},()=>{
+                    //TODO 只能判断初始获取数据成功，不在获取数据，如果是加载更多的话，还需要其它的标志来判断，比如当前page
+                    switch (index){
+                        case 0:
+                            if(this.props.mainDatas.allData.length > 0){
+                                return;
+                            }
+
+                        case 1:
+                            if(this.props.mainDatas.betterData.length > 0){
+                                return;
+                            }
+                        case 2:
+                            if(this.props.mainDatas.shareData.length > 0){
+                                return;
+                            }
+                        case 3:
+                            if(this.props.mainDatas.answerData.length > 0){
+                                return;
+                            }
+                        case 4:
+                            if(this.props.mainDatas.offerData.length > 0){
+                                return;
+                            }
+                    }
                     //发送action，更新redux的state
                     this.props.action.recoverMainStateAction({backUpClickIndex:index});
                     this.fetchData(index);
@@ -98,7 +123,7 @@ class MainTabPage extends Component{
     getTime(time){
         let date = new Date(time);
         let date_value=date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-        return date_value
+        return date_value;
     }
     renderContentItem(data){
         let contentItem =  data.length > 0 ?
