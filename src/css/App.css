@@ -5,7 +5,7 @@ a{
 .tabRoot {
   display: -webkit-flex;
   display: flex;
-  height: 45px;
+  height: 3em;
   flex-direction: row;
   background-color: white;
 }
@@ -52,7 +52,7 @@ a{
 .mainTabRoot{
   display: -webkit-flex;
   display: flex;
-  height: 40px;
+  height: 3em;
   background-color: #1296db;
 }
 .mainTabLinkNormal{
@@ -61,8 +61,9 @@ a{
   flex:1;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 1em;
   color: #bfbfbf;
+  cursor:pointer
 }
 .mainTabLinkSelect{
   display: -webkit-flex;
@@ -70,8 +71,9 @@ a{
   flex:1;
   justify-content: center;
   align-items: center;
-  font-size: 16px;
+  font-size: 1.2em;
   color: white;
+  cursor:pointer
 }
 .noticeContent{
   background-color:gainsboro;
@@ -100,5 +102,95 @@ a{
 }
 .headerBack{
   margin-left: 10px;
+  cursor:pointer;
+}
+.loadViewRoot{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  justify-content: center;
+  flex-direction: column;
+  color: #1296db;
+  font-size: 16px;
+  text-align: center;
+}
+.loadView{
+  display: -webkit-flex;
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border:3px solid #1296db;
+  border-right-color: transparent;
+  border-radius: 90px;
+  margin: 10px auto 3px auto;
+  animation: loadingCircle 1s  linear infinite;
+}
 
+.mainUl{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  flex-direction: column;
+  overflow: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+}
+.mainLi{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  flex-direction: row;
+  margin: 5px 5px 5px 5px;
+  padding: 5px;
+  background-color: white;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.liContentRoot{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  height: 80px;
+  text-align:left;
+  justify-content: space-between;
+  overflow: hidden;
+  flex-direction: column;
+}
+.liContentTitle{
+  display: -webkit-flex;
+  display: flex;
+  /*overflow: hidden;*/
+  margin-left: 5px;
+  text-align:left;
+}
+h4{
+  margin: 0;
+  font-size: 16px;
+  color: #282c34;
+  white-space: nowrap;/*不换行*/
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.liContentAuthor{
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #1296db;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+
+@keyframes loadingCircle {
+    0%{
+         transform: rotate(0deg);
+    }
+    100%{
+          transform: rotate(360deg);
+    }
 }
