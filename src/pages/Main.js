@@ -7,6 +7,8 @@ import LoadView from "./LoadView";
 import HttpFetchUtil from "./HttpFetchUtil";
 
 
+//TODO 直接本地 管理pageIndex，页面离开时再保存，明天做
+
 //此种方法由于跳转到其他页面然后返回时，会恢复该页面的初始状态，所以需要使用redux来保存该页面当前的状态，
 class MainTabPage extends Component{
     static defaultProps={
@@ -16,86 +18,243 @@ class MainTabPage extends Component{
     constructor(props){
         super(props);
         this.state={
-            currentClickTabIndex:this.props.mainDatas.backUpClickIndex,
+            // currentClickTabIndex:this.props.mainDatas.currentClickTabIndex,
             tabTitle:['全部','精华','分享','问答','招聘'],
+            isShowLoading:true,
         };
     }
     componentDidMount(){
-        this.fetchData(this.state.currentClickTabIndex);//默认获取this.props.mainDatas.backUpClickIndex的数据
+        console.log('componentDidMount fetch data')
+        this.getData(this.props.mainDatas.currentClickTabIndex);
     }
-    fetchData(index){
+    //接受父组件改变后的props需要重新渲染组件时用到的比较多
+    componentWillReceiveProps(nextProps){
+        console.log('将要接收到新的Props:')
+        console.log(nextProps);
+    }
+    shouldComponentUpdate (nextProps,nextState) {
+        /**
+         * 唯一用于控制组件重新渲染的生命周期，由于在react中，setState以后，state发生变化，组件会进入重新渲染的流程，（暂时这么理解，其实setState以后有些情况并不会重新渲染，比如数组引用不变）在这里return false可以阻止组件的更新
+
+         因为react父组件的重新渲染会导致其所有子组件的重新渲染，这个时候其实我们是不需要所有子组件都跟着重新渲染的，因此需要在子组件的该生命周期中做判断
+
+         作者：Evan_zhan
+         链接：https://www.jianshu.com/p/c9bc994933d5
+         來源：简书
+         简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
+         */
+        return true;
+    }
+    componentWillUpdate (nextProps,nextState) {
+        /*
+        * shouldComponentUpdate返回true以后，组件进入重新渲染的流程，
+        * 进入componentWillUpdate,这里同样可以拿到nextProps和nextState
+        * */
+    }
+    //render更新props和state后，执行此方法
+    //组件更新完毕后，react只会在第一次初始化成功会进入componentDidmount,之后每次重新渲染后都会进入这个生命周期，
+    // 这里可以拿到prevProps和prevState，即更新前的props和state。
+    componentDidUpdate(prevProps,prevState){
+        //只有在ul列表更新数据后，才能准确的执行scrollTo,恢复当前tab页的数据加载x,y位置
+        switch (this.props.mainDatas.currentClickTabIndex){
+            case 0:
+                //有数据存在说明this.ul引用是存在的
+                if(this.props.mainDatas.allData.length > 0){
+                    this.ul.scrollTo(this.props.mainDatas.allScroll.scrollX,this.props.mainDatas.allScroll.scrollY);
+                }
+                break;
+
+            case 1:
+                if(this.props.mainDatas.betterData.length > 0){
+                    this.ul.scrollTo(this.props.mainDatas.betterScroll.scrollX,this.props.mainDatas.betterScroll.scrollY);
+                }
+                break;
+
+            case 2:
+                if(this.props.mainDatas.shareData.length > 0){
+                    this.ul.scrollTo(this.props.mainDatas.shareScroll.scrollX,this.props.mainDatas.shareScroll.scrollY);
+                }
+                break;
+
+            case 3:
+                if(this.props.mainDatas.answerData.length > 0){
+                    this.ul.scrollTo(this.props.mainDatas.answerScroll.scrollX,this.props.mainDatas.answerScroll.scrollY);
+                }
+                break;
+
+            case 4:
+                if(this.props.mainDatas.offerData.length > 0){
+                    this.ul.scrollTo(this.props.mainDatas.offerScroll.scrollX,this.props.mainDatas.offerScroll.scrollY);
+                }
+                break;
+
+        }
+        //是否加载更多数据
+        if(this.props.mainDatas.isLoadMoreData != prevProps.mainDatas.isLoadMoreData && this.props.mainDatas.isLoadMoreData){
+            console.log('加载更多数据');
+            this.fetchData(this.props.mainDatas.currentClickTabIndex);
+        }
+
+    }
+    getData(index){
+        //TODO 只能判断初始获取数据成功，不在获取数据，如果是加载更多的话，还需要其它的标志来判断，比如当前page
+        // console.log(index)
+        switch (index){
+            case 0:
+                if(this.props.mainDatas.allData.length > 0){
+                    return;
+                }
+                break;
+
+            case 1:
+                if(this.props.mainDatas.betterData.length > 0){
+                    return;
+                }
+                break;
+
+            case 2:
+                if(this.props.mainDatas.shareData.length > 0){
+                    return;
+                }
+                break;
+
+            case 3:
+                if(this.props.mainDatas.answerData.length > 0){
+                    return;
+                }
+                break;
+
+            case 4:
+                if(this.props.mainDatas.offerData.length > 0){
+                    return;
+                }
+                break;
+        }
+        console.log('fetch data')
+        this.fetchData(index);
+    }
+    componentWillUnmount(){
+        // console.log(window.scrollY)
+    }
+    fetchData(index,pageIndex){
+        console.log(this.getUrl(index))
        try {
-           HttpFetchUtil.sendGet(this.getUrl(index),null,(jsonData)=>{
-               console.log('获取到数据：')
-               console.log(jsonData);
+           HttpFetchUtil.sendGet(this.getUrl(index,pageIndex),null,(jsonData)=>{
+               console.log('获取数据成功')
+               // console.log(jsonData);
+
                if(jsonData.success){
-                   this.props.action.recoverMainStateAction({
-                       allData:index === 0 ? jsonData.data :this.props.mainDatas.allData,
-                       betterData:index === 1 ? jsonData.data :this.props.mainDatas.betterData,
-                       shareData:index === 2 ? jsonData.data :this.props.mainDatas.shareData,
-                       answerData:index === 3 ? jsonData.data :this.props.mainDatas.answerData,
-                       offerData:index === 4 ? jsonData.data :this.props.mainDatas.offerData,
-                   });
+                   console.log("index:"+index)
+                       this.props.action.recoverMainStateAction({
+                           isLoadMoreData:false,
+                           allData:index === 0 ? jsonData.data :[],
+                           betterData:index === 1 ? jsonData.data :[],
+                           shareData:index === 2 ? jsonData.data :[],
+                           answerData:index === 3 ? jsonData.data :[],
+                           offerData:index === 4 ? jsonData.data :[],
+                       });
                }else{
-                   alert('获取数据失败');
+                   this.setState({
+                       isShowLoading:false,
+                   },()=> {
+                       this.props.action.recoverMainStateAction({isLoadMoreData:false,})
+                       alert('获取数据失败');
+                   });
                }
            })
        }catch (e){
+           this.props.action.recoverMainStateAction({isLoadMoreData:false,})
             console.log(e.message)
+           this.setState({
+               isShowLoading:false,
+           },()=> {
+               alert('获取数据失败');
+           });
        }
     }
-    getUrl(index){
-        switch (index){
+    setCurrentPageIndex(){
+        const scroll={
+            scrollX:this.ul.scrollLeft,
+            scrollY:this.ul.scrollTop,
+        };
+        switch (this.props.mainDatas.currentClickTabIndex){
             case 0:
-                return "https://cnodejs.org/api/v1/topics?tab=all&page=1&limit=10";
+                return {allScroll:scroll,isLoadMoreData:true,allPageIndex:this.props.mainDatas.allPageIndex+1};
             case 1:
-                return "https://cnodejs.org/api/v1/topics?tab=good&page=1&limit=10";
+                return {betterScroll:scroll,isLoadMoreData:true,betterPageIndex:this.props.mainDatas.betterPageIndex+1};
             case 2:
-                return "https://cnodejs.org/api/v1/topics?tab=share&page=1&limit=10";
+                return {shareScroll:scroll,isLoadMoreData:true,sharePageIndex:this.props.mainDatas.sharePageIndex+1};
             case 3:
-                return "https://cnodejs.org/api/v1/topics?tab=ask&page=1&limit=10";
+                return {answerScroll:scroll,isLoadMoreData:true,answerPageIndex:this.props.mainDatas.answerPageIndex+1};
             case 4:
-                return "https://cnodejs.org/api/v1/topics?tab=job&page=1&limit=10";
+                return {offerScroll:scroll,isLoadMoreData:true,offerPageIndex:this.props.mainDatas.offerPageIndex+1};
         }
     }
+    getUrl(index,pageIndex){
+
+        switch (index){
+            case 0:
+                // console.log('pageIndex:'+this.props.mainDatas.allPageIndex);
+                return "https://cnodejs.org/api/v1/topics?tab=all&page="+this.props.mainDatas.allPageIndex+"&limit=10";
+            case 1:
+                return "https://cnodejs.org/api/v1/topics?tab=good&page="+this.props.mainDatas.betterPageIndex+"&limit=10";
+            case 2:
+                return "https://cnodejs.org/api/v1/topics?tab=share&page="+this.props.mainDatas.sharePageIndex+"&limit=10";
+            case 3:
+                return "https://cnodejs.org/api/v1/topics?tab=ask&page="+this.props.mainDatas.answerPageIndex+"&limit=10";
+            case 4:
+                return "https://cnodejs.org/api/v1/topics?tab=job&page="+this.props.mainDatas.offerPageIndex+"&limit=10";
+        }
+    }
+    //更新tab的数据加载的滚动x,y位置
+    upDateScrollXY(index){
+        const scroll={
+            scrollX:this.ul.scrollLeft,
+            scrollY:this.ul.scrollTop,
+        };
+        switch (index){
+            case 0:
+                this.props.action.recoverMainStateAction({allScroll:scroll});
+                break;
+            case 1:
+                this.props.action.recoverMainStateAction({betterScroll:scroll});
+                break;
+            case 2:
+                this.props.action.recoverMainStateAction({shareScroll:scroll});
+                break;
+            case 3:
+                this.props.action.recoverMainStateAction({answerScroll:scroll});
+                break;
+            case 4:
+                this.props.action.recoverMainStateAction({offerScroll:scroll});
+                break;
+        }
+    }
+    //首页的tab item
     renderTabItem(item,index){
         return(
-            <a   key={index} className={this.state.currentClickTabIndex === index?'mainTabLinkSelect':'mainTabLinkNormal'} onClick={()=>{
-                this.setState({currentClickTabIndex:index},()=>{
-                    //TODO 只能判断初始获取数据成功，不在获取数据，如果是加载更多的话，还需要其它的标志来判断，比如当前page
-                    switch (index){
-                        case 0:
-                            if(this.props.mainDatas.allData.length > 0){
-                                return;
-                            }
-
-                        case 1:
-                            if(this.props.mainDatas.betterData.length > 0){
-                                return;
-                            }
-                        case 2:
-                            if(this.props.mainDatas.shareData.length > 0){
-                                return;
-                            }
-                        case 3:
-                            if(this.props.mainDatas.answerData.length > 0){
-                                return;
-                            }
-                        case 4:
-                            if(this.props.mainDatas.offerData.length > 0){
-                                return;
-                            }
-                    }
-                    //发送action，更新redux的state
-                    this.props.action.recoverMainStateAction({backUpClickIndex:index});
-                    this.fetchData(index);
+            <a   key={index} className={this.props.mainDatas.currentClickTabIndex === index?'mainTabLinkSelect':'mainTabLinkNormal'} onClick={()=>{
+                //在发送action更新currentClickTabIndex之前应该保存点击之前的index的滚动x,y距离
+                //当然要ul标签组件已经加载了的情况下
+                if(this.ul){
+                    this.upDateScrollXY(this.props.mainDatas.currentClickTabIndex);
+                }
+                this.setState({
+                    isShowLoading:this.getListData(index).length > 0 ? false:true,
+                },()=> {
+                    //发送action，更新currentClickTabIndex
+                    this.ul.scrollTo(0,0)
+                    this.props.action.recoverMainStateAction({currentClickTabIndex:index});
+                    this.getData(index);
                 });
+
             }}
             >
                 {item}
             </a>
         )
     }
+    //列表Item
     renderItem(item,index){
         return(
             <li key={index} >
@@ -120,37 +279,28 @@ class MainTabPage extends Component{
             </li>
         )
     }
+    //格式化时间
     getTime(time){
         let date = new Date(time);
         let date_value=date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
         return date_value;
     }
-    renderContentItem(data){
-        let contentItem =  data.length > 0 ?
-            <ul className={'mainUl'}>
-                { data.map((item,index)=> this.renderItem(item,index))}
-            </ul>
-            :
-            <LoadView/>
-        return contentItem;
-
-    }
-    renderContent(){
-        switch (this.state.currentClickTabIndex){
+    getListData(index){
+        switch (index){
             case 0:
-                return this.renderContentItem(this.props.mainDatas.allData);
+                return this.props.mainDatas.allData;
             case 1:
-                return this.renderContentItem(this.props.mainDatas.betterData);
+                return this.props.mainDatas.betterData;
             case 2:
-                return this.renderContentItem(this.props.mainDatas.shareData);
+                return this.props.mainDatas.shareData;
             case 3:
-                return this.renderContentItem(this.props.mainDatas.answerData);
+                return this.props.mainDatas.answerData;
             case 4:
-                return this.renderContentItem(this.props.mainDatas.offerData);
+                return this.props.mainDatas.offerData;
         }
     }
     render(){
-
+        let list= this.getListData(this.props.mainDatas.currentClickTabIndex).map((item,index)=> this.renderItem(item,index));
         return(
             <div className={'mainContent'}>
                 <div className={'mainTabRoot'}>
@@ -158,7 +308,30 @@ class MainTabPage extends Component{
                         return this.renderTabItem(item,index)
                     })}
                 </div>
-                {this.renderContent()}
+                <ul ref={(o)=>this.ul=o} className={'mainUl'}
+                    onScroll={(event)=>{
+                        //判断是否加载更多，
+                        console.log(event.target.clientHeight +"-----"+  event.target.scrollTop+"-----"+  event.target.scrollHeight);
+                        //event.target.scrollTop!==0 添加这个条件，主要是因为所有的Tab都公用一个ul，导致如果前面的tab加载了更多，
+                        //就会导致event.target.scrollHeight和event.target.clientHeight在数据加载完成前时就会一样，导致自动加载更多。
+                        //后面如果每一个tab都有 自己的isLoadMoreData应该就不存在这个问题了 后面会修改
+                        if(event.target.clientHeight +  event.target.scrollTop === event.target.scrollHeight && event.target.scrollTop!==0){
+                            //获取更多数据
+
+                            if(!this.props.mainDatas.isLoadMoreData){
+                                 this.props.action.recoverMainStateAction(this.setCurrentPageIndex());
+                            }
+                        }
+
+                    }}
+                >
+                    {list }
+                    { this.state.isShowLoading &&
+                        <li>
+                            <div className={'loadMore'}/>
+                        </li>
+                    }
+                </ul>
             </div>
         )
     }
