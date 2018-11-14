@@ -5,9 +5,10 @@ import {bindActionCreators} from "redux";
 import * as mainStateAction from  "../reduxActions/mainStateAction";
 import LoadView from "./LoadView";
 import HttpFetchUtil from "./HttpFetchUtil";
+import {NavLink} from "react-router-dom";
 
 
-//TODO 直接本地 管理pageIndex，页面离开时再保存，明天做
+
 
 //此种方法由于跳转到其他页面然后返回时，会恢复该页面的初始状态，所以需要使用redux来保存该页面当前的状态，
 class MainTabPage extends Component{
@@ -24,7 +25,8 @@ class MainTabPage extends Component{
         };
     }
     componentDidMount(){
-        console.log('componentDidMount fetch data')
+        console.log('componentDidMount fetch data');
+        this.recoverUlScrollXY();//从其他页面返回时也需要恢复之前的xy轴方向的滑动距离
         this.getData(this.props.mainDatas.currentClickTabIndex);
     }
     //接受父组件改变后的props需要重新渲染组件时用到的比较多
@@ -32,16 +34,20 @@ class MainTabPage extends Component{
         console.log('将要接收到新的Props:')
         console.log(nextProps);
     }
+    componentWillUnmount(){
+        console.log('componentWillUnmount');
+        //在发送action更新currentClickTabIndex之前应该保存点击之前的index的滚动x,y距离
+        //当然要ul标签组件已经加载了的情况下
+        if(this.ul){//跳转到其它页面时需要保存当前页面的xy轴滑动距离，其它子Tab页面的已经在点击子Tab时就保存了
+            this.upDateScrollXY(this.props.mainDatas.currentClickTabIndex);
+        }
+    }
     shouldComponentUpdate (nextProps,nextState) {
         /**
          * 唯一用于控制组件重新渲染的生命周期，由于在react中，setState以后，state发生变化，组件会进入重新渲染的流程，（暂时这么理解，其实setState以后有些情况并不会重新渲染，比如数组引用不变）在这里return false可以阻止组件的更新
 
          因为react父组件的重新渲染会导致其所有子组件的重新渲染，这个时候其实我们是不需要所有子组件都跟着重新渲染的，因此需要在子组件的该生命周期中做判断
-
-         作者：Evan_zhan
          链接：https://www.jianshu.com/p/c9bc994933d5
-         來源：简书
-         简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
          */
         return true;
     }
@@ -56,6 +62,15 @@ class MainTabPage extends Component{
     // 这里可以拿到prevProps和prevState，即更新前的props和state。
     componentDidUpdate(prevProps,prevState){
         //只有在ul列表更新数据后，才能准确的执行scrollTo,恢复当前tab页的数据加载x,y位置
+       this.recoverUlScrollXY(); //从其他子Tab返回或者数据更新时也需要恢复之前的xy轴方向的滑动距离
+        //是否加载更多数据
+        if(this.props.mainDatas.isLoadMoreData != prevProps.mainDatas.isLoadMoreData && this.props.mainDatas.isLoadMoreData){
+            console.log('加载更多数据');
+            this.fetchData(this.props.mainDatas.currentClickTabIndex);
+        }
+
+    }
+    recoverUlScrollXY(){
         switch (this.props.mainDatas.currentClickTabIndex){
             case 0:
                 //有数据存在说明this.ul引用是存在的
@@ -89,15 +104,8 @@ class MainTabPage extends Component{
                 break;
 
         }
-        //是否加载更多数据
-        if(this.props.mainDatas.isLoadMoreData != prevProps.mainDatas.isLoadMoreData && this.props.mainDatas.isLoadMoreData){
-            console.log('加载更多数据');
-            this.fetchData(this.props.mainDatas.currentClickTabIndex);
-        }
-
     }
     getData(index){
-        //TODO 只能判断初始获取数据成功，不在获取数据，如果是加载更多的话，还需要其它的标志来判断，比如当前page
         // console.log(index)
         switch (index){
             case 0:
@@ -132,9 +140,6 @@ class MainTabPage extends Component{
         }
         console.log('fetch data')
         this.fetchData(index);
-    }
-    componentWillUnmount(){
-        // console.log(window.scrollY)
     }
     fetchData(index,pageIndex){
         console.log(this.getUrl(index))
@@ -258,7 +263,7 @@ class MainTabPage extends Component{
     renderItem(item,index){
         return(
             <li key={index} >
-                <div className={'mainLi'}>
+                <NavLink to={'/login'} className={'mainLi'}>
                     <div style={{width:80}}>
                         <img className={'authorHead'} src={item.author.avatar_url} width={80} height={80}/>
                     </div>
@@ -275,7 +280,7 @@ class MainTabPage extends Component{
                             <div className={''}>{this.getTime(item.last_reply_at)}</div>
                         </div>
                     </div>
-                </div>
+                </NavLink>
             </li>
         )
     }
