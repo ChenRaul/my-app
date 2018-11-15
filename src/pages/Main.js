@@ -239,6 +239,10 @@ class MainTabPage extends Component{
     renderTabItem(item,index){
         return(
             <a   key={index} className={this.props.mainDatas.currentClickTabIndex === index?'mainTabLinkSelect':'mainTabLinkNormal'} onClick={()=>{
+
+                if(this.props.mainDatas.currentClickTabIndex === index){
+                    return;
+                }
                 //在发送action更新currentClickTabIndex之前应该保存点击之前的index的滚动x,y距离
                 //当然要ul标签组件已经加载了的情况下
                 if(this.ul){
@@ -263,7 +267,8 @@ class MainTabPage extends Component{
     renderItem(item,index){
         return(
             <li key={index} >
-                <NavLink to={'/login'} className={'mainLi'}>
+                {/*跳转到Detail详情页面，并传递id参数过去*/}
+                <NavLink to={`/detail/${item.id}`} className={'mainLi'}>
                     <div style={{width:80}}>
                         <img className={'authorHead'} src={item.author.avatar_url} width={80} height={80}/>
                     </div>

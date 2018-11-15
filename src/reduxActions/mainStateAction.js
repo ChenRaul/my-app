@@ -1,7 +1,8 @@
 
 export const actionTypes={
     MAIN_STATE:'MAIN_STATE',
-    NOTICE_STATE:'NOTICE_STATE'
+    NOTICE_STATE:'NOTICE_STATE',
+    DETAIL_STATE:'DETAIL_STATE',
 
 }
 

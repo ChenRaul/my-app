@@ -22,7 +22,7 @@ a{
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #282c34;
+  background-color: #e4e4e4;
 }
 .normal{
   display: -webkit-flex;
@@ -47,7 +47,7 @@ a{
   display: flex;
   height: 100%;
   flex-direction: column;
-  background-color: gainsboro;
+  background-color: #e4e4e4;
 }
 .mainTabRoot{
   display: -webkit-flex;
@@ -194,6 +194,28 @@ h4{
   color: #1296db;
   margin-left: 5px;
   margin-right: 5px;
+}
+.detailContentRoot{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  flex-direction: column;
+  background-color: white;
+  padding: 5px 5px 5px 5px;
+}
+.authorHead{
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  border: 0.01em solid #ddd;
+  background-size: cover;
+  background-color: #eee;
+}
+.detailContentUser{
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  height:3.5em;
 }
 
 
