@@ -1,6 +1,12 @@
 a{
   text-decoration: none;
 }
+/*//让所有的标签img动态根据浏览器的宽高缩放*/
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 
 .tabRoot {
   display: -webkit-flex;
@@ -148,6 +154,7 @@ a{
   margin: 0;
 
 }
+
 .mainLi{
   display: -webkit-flex;
   display: flex;
@@ -202,6 +209,12 @@ h4{
   flex-direction: column;
   background-color: white;
   padding: 5px 5px 5px 5px;
+  overflow: auto;
+}
+.mainListAuthorHead{
+  width: 5em;
+  height: 5em;
+  background-size: cover;
 }
 .authorHead{
   width: 3em;
@@ -216,6 +229,72 @@ h4{
   display: flex;
   flex-direction: row;
   height:3.5em;
+  align-items: center;
+}
+.detailUserInfo{
+  display: -webkit-flex;
+  display: flex;
+  height: 3em;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.detailUserInfoFirstLine{
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  font-size: 1em;
+  align-items: center;
+  width: 100%;
+}
+.detailContentText{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  flex-direction: column;
+
+}
+.detailTitle{
+   background-color: #eeeeee;
+   color: #282c34;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: left;
+  padding: 0.3em 0.3em 0.3em 0.3em;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+
+.detailReplyRoot{
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.detailReplyLi{
+  display: -webkit-flex;
+  display: flex;
+  padding: 0.3em 0.3em 0.3em 0.3em;
+  border-bottom: #bfbfbf solid 0.1em;;
+}
+.replyContent{
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+}
+.detailReplyLikeImg{
+  background-size: cover;
+}
+.replyShareLike{
+  display: -webkit-flex;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 

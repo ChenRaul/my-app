@@ -75,31 +75,38 @@ class MainTabPage extends Component{
             case 0:
                 //有数据存在说明this.ul引用是存在的
                 if(this.props.mainDatas.allData.length > 0){
-                    this.ul.scrollTo(this.props.mainDatas.allScroll.scrollX,this.props.mainDatas.allScroll.scrollY);
+                    this.ul.scrollLeft = this.props.mainDatas.allScroll.scrollX;
+                    this.ul.scrollTop = this.props.mainDatas.allScroll.scrollY;
+                   //android手机浏览器不支持该方法，所以统一使用上面的方式来设置滚动位置
+                    // this.ul.scrollTo(this.props.mainDatas.allScroll.scrollX,this.props.mainDatas.allScroll.scrollY);
                 }
                 break;
 
             case 1:
                 if(this.props.mainDatas.betterData.length > 0){
-                    this.ul.scrollTo(this.props.mainDatas.betterScroll.scrollX,this.props.mainDatas.betterScroll.scrollY);
+                    this.ul.scrollLeft = this.props.mainDatas.betterScroll.scrollX;
+                    this.ul.scrollTop = this.props.mainDatas.betterScroll.scrollY;
                 }
                 break;
 
             case 2:
                 if(this.props.mainDatas.shareData.length > 0){
-                    this.ul.scrollTo(this.props.mainDatas.shareScroll.scrollX,this.props.mainDatas.shareScroll.scrollY);
+                    this.ul.scrollLeft = this.props.mainDatas.shareScroll.scrollX;
+                    this.ul.scrollTop = this.props.mainDatas.shareScroll.scrollY;
                 }
                 break;
 
             case 3:
                 if(this.props.mainDatas.answerData.length > 0){
-                    this.ul.scrollTo(this.props.mainDatas.answerScroll.scrollX,this.props.mainDatas.answerScroll.scrollY);
+                    this.ul.scrollLeft = this.props.mainDatas.answerScroll.scrollX;
+                    this.ul.scrollTop = this.props.mainDatas.answerScroll.scrollY;
                 }
                 break;
 
             case 4:
                 if(this.props.mainDatas.offerData.length > 0){
-                    this.ul.scrollTo(this.props.mainDatas.offerScroll.scrollX,this.props.mainDatas.offerScroll.scrollY);
+                    this.ul.scrollLeft = this.props.mainDatas.offerScroll.scrollX;
+                    this.ul.scrollTop = this.props.mainDatas.offerScroll.scrollY;
                 }
                 break;
 
@@ -252,7 +259,8 @@ class MainTabPage extends Component{
                     isShowLoading:this.getListData(index).length > 0 ? false:true,
                 },()=> {
                     //发送action，更新currentClickTabIndex
-                    this.ul.scrollTo(0,0)
+                    this.ul.scrollLeft = 0;
+                    this.ul.scrollTop =0;
                     this.props.action.recoverMainStateAction({currentClickTabIndex:index});
                     this.getData(index);
                 });
@@ -269,9 +277,7 @@ class MainTabPage extends Component{
             <li key={index} >
                 {/*跳转到Detail详情页面，并传递id参数过去*/}
                 <NavLink to={`/detail/${item.id}`} className={'mainLi'}>
-                    <div style={{width:80}}>
-                        <img className={'authorHead'} src={item.author.avatar_url} width={80} height={80}/>
-                    </div>
+                    <div className={'mainListAuthorHead'} style={{backgroundImage: 'url(' + item.author.avatar_url + ')' }}/>
                     <div className={'liContentRoot'}>
                         <div className={'liContentTitle'}>
                             <h4>{item.title}</h4>

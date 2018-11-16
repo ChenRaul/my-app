@@ -4,6 +4,7 @@ import Header from "./Header";
 import HttpFetchUtil from "./HttpFetchUtil";
 import * as detailAction from "../reduxActions/detailAction";
 import {bindActionCreators} from "redux";
+import Tool from "./Tool";
 
 
 
@@ -47,23 +48,53 @@ class Detail extends React.Component{
             <div className={'detailContentRoot'}>
                 <div className={'detailContentUser'}>
                     <div className={'authorHead'} style={{ backgroundImage: 'url(' + data.author.avatar_url + ')' }}/>
-                    <div>
-                        <div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
+                    <div className={'detailUserInfo'}>
+                        <div className={'detailUserInfoFirstLine'}>
+                            <div style={{color:'#1296db',marginLeft:'0.5em'}}>{data.author.loginname}</div>
+                            <div style={{width:'100%',marginLeft:'0.5em'}}>{Tool.formatDate(data.create_at)}</div>
+
+                            <div style={{width:'5em',textAlign:'right'}}> #楼主</div>
                         </div>
-                        <div>
-                            <div></div>
-                            <div></div>
+                        <div className={'detailUserInfoFirstLine'} style={{fontSize:'0.8em',color:'gray'}}>
+                            <div style={{marginLeft:'0.5em'}} >阅读：{data.visit_count}</div>
+                            <div style={{marginLeft:'2em'}}>回复：{data.reply_count}</div>
                         </div>
                     </div>
                 </div>
 
-
-                {/*// dangerouslySetInnerHTML设置一段网页内容到页面中去，react专用*/}
-                <div style={{flex:1,}} dangerouslySetInnerHTML={{__html: this.props.data[this.props.match.params.id].content}}/>
-
+               <div className={'detailContentText'}>
+                   <div className={'detailTitle'}>{data.title}</div>
+                   {/*// dangerouslySetInnerHTML设置一段网页内容到页面中去，react专用*/}
+                   <div style={{fontSize:'0.8em'}} dangerouslySetInnerHTML={{__html: data.content}}/>
+                   <div style={{marginTop:'0.5em',marginBottom:"1em",fontSize:'0.8em'}}>
+                       <div style={{backgroundColor:'#eeeeee',borderLeft:'0.5em solid #1296db',padding:'0.5em'}}>共{data.reply_count}条回复</div>
+                        {/*回复列表*/}
+                        <ul className={'detailReplyRoot'}>
+                            {
+                                data.replies.map((item,index)=>{
+                                    return(
+                                        <li key={index} className={'detailReplyLi'}>
+                                            <div className={'authorHead'} style={{ backgroundImage: 'url(' + item.author.avatar_url + ')' }}/>
+                                            <div className={'replyContent'} style={{width:'100%'}}>
+                                                <div className={'detailUserInfoFirstLine'}>
+                                                    <div style={{color:'#1296db',marginLeft:'0.5em'}}>{item.author.loginname}</div>
+                                                    <div style={{width:'100%',marginLeft:'0.5em'}}>{Tool.formatDate(item.create_at)}</div>
+                                                    <div style={{width:'5em',textAlign:'right'}}> #{index+1}</div>
+                                                </div>
+                                                <div style={{marginLeft:'0.5em',listStyle: 'none'}} dangerouslySetInnerHTML={{__html:item.content}}/>
+                                                <div className={'replyShareLike'} style={{height:'3em',}}>
+                                                    <div className={'detailReplyLikeImg'} style={{width:'1.5em',height:'1.5em', backgroundImage:`url(${require("../img/like.svg")})`}}/>
+                                                    <div style={{marginRight:'2em'}}>{item.ups.length ? item.ups.length : ''}</div>
+                                                    <div className={'detailReplyLikeImg'} style={{marginRight:'2em',width:'1.5em',height:'1.5em',backgroundImage: `url(${require("../img/share.svg")})` }}/>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ul>
+                   </div>
+               </div>
             </div>
         )
     }
@@ -86,8 +117,6 @@ function mapStateToProps(state){
 //将action绑定到props，以便组件props中存在改action，可以通过action直接调用recoverMainStateAction更新保存当前点击的tab index，然后更新redux的store
 const mapDispatchToProps = (dispatch) =>{
     return {
-        //bindActionCreators的第一个参数是函数，所以不能直接写recoverMainStateReducer，因为recoverMainStateReducer返回的是一个对象
-        //注意import也必须按照此处文件这样，也就是说第一个参数必须是action creater，所以可以把所有的action写在一个文件里面
         action:bindActionCreators(detailAction,dispatch)
     }
 }
