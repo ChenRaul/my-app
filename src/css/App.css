@@ -1,11 +1,7 @@
 a{
   text-decoration: none;
 }
-/*//让所有的标签img动态根据浏览器的宽高缩放*/
-img {
-  max-width: 100%;
-  max-height: 100%;
-}
+
 
 
 .tabRoot {
@@ -13,7 +9,9 @@ img {
   display: flex;
   height: 3em;
   flex-direction: row;
-  background-color: white;
+  background-color: #ffffff;
+  z-index: 3;
+  border-top: #e2e2e2 0.01em solid ;
 }
 .tab{
   display: -webkit-flex;
@@ -217,11 +215,13 @@ h4{
   background-size: cover;
 }
 .authorHead{
+  display: -webkit-flex;
+  display: flex;
   width: 3em;
   height: 3em;
   border-radius: 50%;
   border: 0.01em solid #ddd;
-  background-size: cover;
+  /*background-size: cover;*/
   background-color: #eee;
 }
 .detailContentUser{
@@ -254,8 +254,16 @@ h4{
   display: flex;
   flex:1;
   flex-direction: column;
-
 }
+
+.detailContent img {
+  /*//detailContent className下的所有的标签img动态根据浏览器的宽高缩放*/
+  max-width: 100%;
+  max-height: 100%;
+}
+
+
+
 .detailTitle{
    background-color: #eeeeee;
    color: #282c34;
@@ -280,7 +288,7 @@ h4{
   display: -webkit-flex;
   display: flex;
   padding: 0.3em 0.3em 0.3em 0.3em;
-  border-bottom: #bfbfbf solid 0.1em;;
+  border-bottom: #bfbfbf solid 0.1em;
 }
 .replyContent{
   display: -webkit-flex;
@@ -289,12 +297,118 @@ h4{
 }
 .detailReplyLikeImg{
   background-size: cover;
+  cursor:pointer
 }
 .replyShareLike{
   display: -webkit-flex;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+}
+
+/*User*/
+.userHeaderRoot{
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  background-color: #1296db;
+  height: 18em;
+  /*padding-top: 1em;*/
+
+}
+.userScoreRoot{
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+}
+.userContentRoot{
+  display: -webkit-flex;
+  display: flex;
+   flex:1;
+  height: 100%;
+  flex-direction: column;
+  height: 100%;
+}
+.userTabRoot{
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  background-color: #eeeeee;
+  font-size: 1em;
+  color:#282c34;
+  height: 2em;
+}
+.userTabItemNormal{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  align-items: center;
+  justify-content: center;
+  cursor:pointer
+
+}
+.userTabItemSelect{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+  align-items: center;
+  justify-content: center;
+  cursor:pointer;
+  border-bottom: #1296db 0.1em solid;
+}
+.userUl{
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  list-style: none;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow:auto;
+}
+.userLiItem{
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  flex:1;
+  flex-direction: row;
+  font-size: 1em;
+  color: #282c34;
+  background-color: white;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  border-bottom: #bfbfbf 0.01em solid;
+  justify-content: flex-end;
+
+}
+.userInfoRoot{
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.userLiTitle{
+  display: -webkit-flex;
+  display: flex;
+  flex:1;
+}
+
+.userLiTime{
+  /*width: 5em;*/
+  /*text-align: right;*/
+  padding: 0 0 0 0.2em;
+  font-size: 0.6em;
+  color: gray;
+}
+
+.userFlex{
+  display: -webkit-flex;
+  display: flex;
 }
 
 

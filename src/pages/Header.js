@@ -20,6 +20,7 @@ export default class Header extends Component{
                     }}
                      src={require('../img/back.svg')} width={25} height={25}/>
                 <div className={'headerTitle'}>{this.props.title}</div>
+                <div style={{width:35}}/>
             </div>
 
         )

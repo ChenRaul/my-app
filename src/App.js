@@ -9,6 +9,7 @@ import './css/App.css';
 import {connect} from "react-redux";
 import createBrowserHistory from 'history/createBrowserHistory'
 import Detail from "./pages/Detail";
+import UserCenter from "./pages/User";
 
 const history = createBrowserHistory();
 class App extends Component {
@@ -29,7 +30,10 @@ class App extends Component {
                  <Route exact={false} path={"/notice"} component={Notice}/>
                  <Route exact={false} path={"/message"} component={Message}/>
                  <Route exact={false} path={"/me"} component={Me}/>
+
                  <Route exact={false} path={"/login"} component={Login}/>
+                 {/*//个人中心页面需要将个人的登录名传递过去*/}
+                 <Route exact={false} path={"/user/:loginname"} component={UserCenter}/>
                 {/*//详情页面需要每个列表item的id，通过此方法传递id过去*/}
                  <Route exact={false} path={"/detail/:id"} component={Detail}/>
 

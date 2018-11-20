@@ -5,6 +5,7 @@ import HttpFetchUtil from "./HttpFetchUtil";
 import * as detailAction from "../reduxActions/detailAction";
 import {bindActionCreators} from "redux";
 import Tool from "./Tool";
+import {NavLink} from "react-router-dom";
 
 
 
@@ -47,10 +48,10 @@ class Detail extends React.Component{
         return(
             <div className={'detailContentRoot'}>
                 <div className={'detailContentUser'}>
-                    <div className={'authorHead'} style={{ backgroundImage: 'url(' + data.author.avatar_url + ')' }}/>
+                    <img className={'authorHead'} src={data.author.avatar_url} />
                     <div className={'detailUserInfo'}>
                         <div className={'detailUserInfoFirstLine'}>
-                            <div style={{color:'#1296db',marginLeft:'0.5em'}}>{data.author.loginname}</div>
+                            <NavLink to={`/user/${data.author.loginname}`} className={''} style={{color:'#1296db',marginLeft:'0.5em'}}>{data.author.loginname}</NavLink>
                             <div style={{width:'100%',marginLeft:'0.5em'}}>{Tool.formatDate(data.create_at)}</div>
 
                             <div style={{width:'5em',textAlign:'right'}}> #楼主</div>
@@ -65,7 +66,7 @@ class Detail extends React.Component{
                <div className={'detailContentText'}>
                    <div className={'detailTitle'}>{data.title}</div>
                    {/*// dangerouslySetInnerHTML设置一段网页内容到页面中去，react专用*/}
-                   <div style={{fontSize:'0.8em'}} dangerouslySetInnerHTML={{__html: data.content}}/>
+                   <div className={'detailContent'} style={{fontSize:'0.8em'}} dangerouslySetInnerHTML={{__html: data.content}}/>
                    <div style={{marginTop:'0.5em',marginBottom:"1em",fontSize:'0.8em'}}>
                        <div style={{backgroundColor:'#eeeeee',borderLeft:'0.5em solid #1296db',padding:'0.5em'}}>共{data.reply_count}条回复</div>
                         {/*回复列表*/}
@@ -74,18 +75,28 @@ class Detail extends React.Component{
                                 data.replies.map((item,index)=>{
                                     return(
                                         <li key={index} className={'detailReplyLi'}>
-                                            <div className={'authorHead'} style={{ backgroundImage: 'url(' + item.author.avatar_url + ')' }}/>
+                                            <img className={'authorHead'} src={item.author.avatar_url} />
                                             <div className={'replyContent'} style={{width:'100%'}}>
                                                 <div className={'detailUserInfoFirstLine'}>
-                                                    <div style={{color:'#1296db',marginLeft:'0.5em'}}>{item.author.loginname}</div>
+                                                    <NavLink to={`/user/${item.author.loginname}`} style={{color:'#1296db',marginLeft:'0.5em'}}>{item.author.loginname}</NavLink>
                                                     <div style={{width:'100%',marginLeft:'0.5em'}}>{Tool.formatDate(item.create_at)}</div>
                                                     <div style={{width:'5em',textAlign:'right'}}> #{index+1}</div>
                                                 </div>
                                                 <div style={{marginLeft:'0.5em',listStyle: 'none'}} dangerouslySetInnerHTML={{__html:item.content}}/>
                                                 <div className={'replyShareLike'} style={{height:'3em',}}>
-                                                    <div className={'detailReplyLikeImg'} style={{width:'1.5em',height:'1.5em', backgroundImage:`url(${require("../img/like.svg")})`}}/>
+                                                    <div className={'detailReplyLikeImg'} style={{width:'1.5em',height:'1.5em', backgroundImage:`url(${require("../img/like.svg")})`}}
+                                                        onClick={()=>{
+                                                           alert('你尚未登录')
+
+                                                        }}
+                                                    />
                                                     <div style={{marginRight:'2em'}}>{item.ups.length ? item.ups.length : ''}</div>
-                                                    <div className={'detailReplyLikeImg'} style={{marginRight:'2em',width:'1.5em',height:'1.5em',backgroundImage: `url(${require("../img/share.svg")})` }}/>
+                                                    <div className={'detailReplyLikeImg'} style={{marginRight:'2em',width:'1.5em',height:'1.5em',backgroundImage: `url(${require("../img/share.svg")})` }}
+                                                         onClick={()=>{
+                                                             alert('你尚未登录')
+
+                                                         }}
+                                                    />
                                                 </div>
                                             </div>
                                         </li>
@@ -102,8 +113,11 @@ class Detail extends React.Component{
         console.log("Detail Props：",this.props);
         return(
             <div className={'mainRoot'}>
-                {/*将页面的props传递给Header组件*/}
+                {/*将页面的props传递给Header组件，以下两种方式均可，只是前者是把父组件所有的props传递给子组件。
+                后者只是把子组件需要的history属性传递子组件*/}
                 <Header {...this.props} title={'详情'}/>
+                {/*<Header history={this.props.history} title={'详情'}/>*/}
+
                 {this.props.data[this.props.match.params.id] ? this.renderArticleContent() : <div className={'loadMore'}/>}
             </div>
         )
