@@ -126,7 +126,7 @@ class Detail extends React.Component{
 
 function mapStateToProps(state){
         //data实际上是一个对象
-    return {data:state.detailReducer};
+    return {data:state.saveDetailDataReducer};
 }
 //将action绑定到props，以便组件props中存在改action，可以通过action直接调用recoverMainStateAction更新保存当前点击的tab index，然后更新redux的store
 const mapDispatchToProps = (dispatch) =>{
