@@ -364,7 +364,7 @@ class Main extends Component{
     }
 }
 //将redux的state转换成props，以便组件props中存在mainDatas，可以直接调用
-//此处的参数state实际上包含了myReducers中的myReducers对象，myReducers对象实际上包含了多个reducer的state合并后的对象，
+//此处的参数state实际上等同于myReducers对象，实际上包含了myReducers中的recoverMainStateReducer对象，myReducers对象实际上包含了多个reducer的state合并后的对象，
 //此页面只需要recoverMainStateReducer对象，所以将state.recoverMainStateReducer赋值给mainDatas，此处的mainDatas实际上与
 // mainStateAction中的mainDatas的值相同，但是对象不一样,说白了就是数据结构是一样的
 function mapStateToProps(state){
